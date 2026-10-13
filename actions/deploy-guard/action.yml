@@ -1,0 +1,108 @@
+name: OpenEOS deploy guard
+description: >
+  Holds a production deploy while an OpenEOS event is selling. Asks the API
+  (GET /api/internal/deploy-guard); while it reports busy, checks again every
+  5 minutes, for at most 90 minutes, then fails the job.
+
+inputs:
+  token:
+    description: Value of DEPLOY_GUARD_TOKEN (same as in the production API .env). Empty skips the check with a warning.
+    required: false
+    default: ''
+  url:
+    description: Deploy guard endpoint. Empty uses the production API.
+    required: false
+    default: ''
+  force:
+    description: '"true" skips the check (manual deploy via workflow_dispatch).'
+    required: false
+    default: 'false'
+  interval-minutes:
+    description: Minutes between two checks while busy.
+    required: false
+    default: '5'
+  max-wait-minutes:
+    description: Give up after this many minutes.
+    required: false
+    default: '90'
+  window-minutes:
+    description: Real orders within this many minutes count as "selling".
+    required: false
+    default: '30'
+
+runs:
+  using: composite
+  steps:
+    - name: Wait until no event is selling
+      shell: bash
+      env:
+        GUARD_TOKEN: ${{ inputs.token }}
+        GUARD_URL: ${{ inputs.url }}
+        GUARD_FORCE: ${{ inputs.force }}
+        INTERVAL_MIN: ${{ inputs.interval-minutes }}
+        MAX_WAIT_MIN: ${{ inputs.max-wait-minutes }}
+        WINDOW_MIN: ${{ inputs.window-minutes }}
+      run: |
+        set -uo pipefail
+        url="${GUARD_URL:-https://api.openeos.de/api/internal/deploy-guard}"
+
+        if [ "${GUARD_FORCE}" = "true" ]; then
+          echo "::warning title=Deploy-Schutz::force=true — Prüfung übersprungen."
+          exit 0
+        fi
+        if [ -z "${GUARD_TOKEN}" ]; then
+          echo "::warning title=Deploy-Schutz::Secret DEPLOY_GUARD_TOKEN fehlt — Prüfung übersprungen."
+          exit 0
+        fi
+
+        interval=$(( INTERVAL_MIN * 60 ))
+        # Erste Pruefung sofort, dann alle INTERVAL_MIN Minuten — die letzte
+        # nach MAX_WAIT_MIN Minuten.
+        max_waits=$(( MAX_WAIT_MIN / (INTERVAL_MIN > 0 ? INTERVAL_MIN : 1) ))
+        body=$(mktemp)
+        attempt=0
+
+        while :; do
+          attempt=$(( attempt + 1 ))
+          code=$(curl -sS -o "$body" -w '%{http_code}' --max-time 20 \
+            -H "Authorization: Bearer ${GUARD_TOKEN}" \
+            "${url}?windowMinutes=${WINDOW_MIN}") || code=000
+
+          case "$code" in
+            200)
+              # Antwort ist { data: { busy, events: [{ name, lastOrderAt }] } }.
+              # Namen der Veranstaltungen bewusst nicht ausgeben: die Logs
+              # oeffentlicher Repositories sind oeffentlich.
+              busy=$(jq -r '(.data // .).busy' "$body" 2>/dev/null || echo "?")
+              if [ "$busy" = "false" ]; then
+                echo "Deploy-Schutz: kein Fest aktiv — Deploy frei."
+                exit 0
+              fi
+              if [ "$busy" = "true" ]; then
+                count=$(jq -r '(.data // .).events | length' "$body")
+                last=$(jq -r '(.data // .).events | map(.lastOrderAt) | max' "$body")
+                reason="${count} Veranstaltung(en) verkaufen gerade (letzte echte Bestellung ${last})"
+              else
+                reason="unerwartete Antwort vom Deploy-Schutz"
+              fi
+              ;;
+            404)
+              echo "::warning title=Deploy-Schutz::Endpunkt nicht vorhanden (HTTP 404: API-Version ohne Deploy-Schutz, DEPLOY_GUARD_TOKEN auf dem Server nicht gesetzt oder API nicht erreichbar) — Prüfung übersprungen."
+              exit 0
+              ;;
+            401|403)
+              echo "::error title=Deploy-Schutz::Token abgelehnt (HTTP ${code}) — DEPLOY_GUARD_TOKEN im Repository und in der API-.env vergleichen."
+              exit 1
+              ;;
+            *)
+              reason="Deploy-Schutz nicht erreichbar (HTTP ${code})"
+              ;;
+          esac
+
+          if [ "$attempt" -gt "$max_waits" ]; then
+            echo "::error title=Deploy abgebrochen::${reason} — nach ${MAX_WAIT_MIN} min Wartezeit. Nach dem Fest den Job erneut starten oder den Workflow per „Run workflow“ mit force=true auslösen."
+            exit 1
+          fi
+          echo "::notice title=Deploy wartet::${reason} — nächste Prüfung in ${INTERVAL_MIN} min (Versuch ${attempt})."
+          sleep "$interval"
+        done
