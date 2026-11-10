@@ -1,0 +1,81 @@
+name: Frage / Support
+description: Fragen zur Nutzung, Installation oder zum Betrieb von OpenEOS? / Questions about using, installing or running OpenEOS?
+title: '[Frage]: '
+labels: ['question']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Für Fragen zur Nutzung, Installation und zum Betrieb gibt es zuerst die [Dokumentation](https://docs.openeos.de). / For questions about usage, installation and operation, start with the [documentation](https://docs.openeos.de).
+
+        - Für reproduzierbare Fehler bitte das **Bug**-Template verwenden. / For reproducible bugs, please use the **Bug report** template.
+        - Für Ideen und Verbesserungen das **Feature**-Template. / For ideas and improvements, use the **Feature request** template.
+        - Sicherheitslücken bitte gemäß [SECURITY.md](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md) melden. / Please report security issues according to the [security policy](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md).
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Deine Frage / Your question
+      description: Was möchtest du wissen? Bitte so konkret wie möglich. / What would you like to know? Please be as specific as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: Bereits versucht / What you already tried
+      description: Welche Schritte oder Lösungsansätze hast du probiert? / Which steps or approaches have you tried?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Bereich / Area
+      description: Worauf bezieht sich deine Frage? / What is your question about?
+      options:
+        - Admin-Dashboard
+        - POS (Kasse) / POS
+        - Kundendisplay / Customer display
+        - Küchen- & Stationsdisplay / Kitchen & station display
+        - Geräte & Kopplung / Devices & pairing
+        - Bestellungen & Zahlungen / Orders & payments
+        - Rechnungen & Stripe / Invoices & Stripe
+        - Produkte, Kategorien & Lager / Products, categories & inventory
+        - Events, Tische & Preise / Events, tables & pricing
+        - Drucker & Drucker-Agent / Printers & printer agent
+        - Integrationen (z. B. SumUp) / Integrations
+        - Anmeldung & Benutzerkonten / Sign-in & accounts
+        - Self-Hosting & Deployment
+        - Sonstiges / Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Betrieb / Deployment
+      description: Wie betreibst du OpenEOS? / How do you run OpenEOS?
+      options:
+        - Gehostet (app.openeos.de) / Hosted
+        - Eigene Instanz (Self-Hosting) / Self-hosted instance
+        - Lokale Entwicklung / Local development
+        - Weiß nicht / Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Umgebung / Environment
+      description: 'Optional: Browser, Gerät, Version oder Image-Tag. / Optional: browser, device, version or image tag.'
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Bestätigung / Confirmation
+      options:
+        - label: Ich habe die Dokumentation und bereits vorhandene Issues geprüft. / I checked the documentation and existing issues.
+          required: true
