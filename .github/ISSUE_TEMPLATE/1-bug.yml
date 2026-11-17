@@ -1,0 +1,134 @@
+name: Fehler melden / Bug report
+description: Etwas funktioniert nicht wie erwartet? / Something is not working as expected?
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke, dass du dir Zeit für einen Fehlerbericht nimmst! / Thanks for taking the time to report a bug!
+
+        - Bitte prüfe zuerst, ob es bereits ein passendes Issue gibt. / Please check first whether a matching issue already exists.
+        - Sicherheitslücken gehören **nicht** hierher, sondern in die [SECURITY.md](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md). / Security vulnerabilities do **not** belong here – please follow the [security policy](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md).
+        - Je genauer die Angaben, desto schneller die Behebung. / The more precise the details, the faster the fix.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Bereich / Area
+      description: Wo tritt der Fehler auf? / Where does the bug occur?
+      options:
+        - Admin-Dashboard
+        - POS (Kasse) / POS
+        - Kundendisplay / Customer display
+        - Küchen- & Stationsdisplay / Kitchen & station display
+        - Geräte & Kopplung / Devices & pairing
+        - Bestellungen & Zahlungen / Orders & payments
+        - Rechnungen & Stripe / Invoices & Stripe
+        - Produkte, Kategorien & Lager / Products, categories & inventory
+        - Events, Tische & Preise / Events, tables & pricing
+        - Drucker & Drucker-Agent / Printers & printer agent
+        - Integrationen (z. B. SumUp) / Integrations
+        - Anmeldung & Benutzerkonten / Sign-in & accounts
+        - Self-Hosting & Deployment
+        - Sonstiges / Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Betrieb / Deployment
+      description: Wo ist das Problem aufgetreten? / Where did the problem occur?
+      options:
+        - Gehostet (app.openeos.de) / Hosted
+        - Eigene Instanz (Self-Hosting) / Self-hosted instance
+        - Lokale Entwicklung / Local development
+        - Weiß nicht / Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version / Release
+      description: Image-Tag, Release oder Commit-Hash, falls bekannt. / Image tag, release or commit hash if known.
+      placeholder: z. B. / e.g. v1.6.0 oder / or 1a2b3c4
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Umgebung / Environment
+      description: Browser und Version, Betriebssystem und Gerät (z. B. iPad, Fire TV, Desktop). / Browser and version, operating system and device (e.g. iPad, Fire TV, desktop).
+      placeholder: |
+        Chrome 141 auf iPadOS 26 (iPad Air)
+        / Chrome 141 on iPadOS 26 (iPad Air)
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Nachvollziehen / Steps to reproduce
+      description: Wie löst du den Fehler aus? Bitte Schritt für Schritt. / How do you trigger the bug? Please list the steps.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsächliches Verhalten / Actual behaviour
+      description: Was passiert? / What happens?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartetes Verhalten / Expected behaviour
+      description: Was sollte stattdessen passieren? / What should happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevante Logs / Relevant logs
+      description: Browser-Konsole oder Server-Log. Wird automatisch als Code formatiert. / Browser console or server log. Formatted as code automatically.
+      render: shell
+    validations:
+      required: false
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Screenshots / Screenshots
+      description: Screenshots oder Logdateien, die helfen. / Screenshots or log files that help.
+    validations:
+      required: false
+      accept: '.png,.jpg,.jpeg,.gif,.webp,.log,.txt'
+
+  - type: input
+    id: sentry-event-id
+    attributes:
+      label: Sentry-Event-ID / Sentry event ID
+      description: Falls ein Sentry-Event erzeugt wurde (siehe Fehlerseite). / If a Sentry event was created (see the error page).
+      placeholder: z. B. / e.g. 3f2a9c1b4e5d4a6b8c7d
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Bestätigung / Confirmation
+      options:
+        - label: Ich habe nach bereits vorhandenen Issues gesucht. / I searched for existing issues.
+          required: true
+        - label: Dies ist keine Sicherheitslücke; solche melde ich gemäß [SECURITY.md](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md). / This is not a security vulnerability; I report those according to the [security policy](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md).
+          required: true

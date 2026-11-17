@@ -1,0 +1,93 @@
+name: Feature vorschlagen / Feature request
+description: Eine Idee oder Verbesserung für OpenEOS? / An idea or improvement for OpenEOS?
+title: '[Feature]: '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deinen Vorschlag! / Thanks for your suggestion!
+
+        Bitte beschreibe zuerst das Problem, dann die Lösung – so lässt sich der Nutzen besser einschätzen. / Please describe the problem first, then the solution – that makes the benefit easier to assess.
+
+        Sicherheitslücken bitte gemäß [SECURITY.md](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md) melden, nicht als Issue. / Please report security issues according to the [security policy](https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md), not as an issue.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem & Motivation / Problem & motivation
+      description: Welches Problem löst das Feature? Wer ist betroffen? / Which problem does the feature solve? Who is affected?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Lösungsvorschlag / Proposed solution
+      description: Wie stellst du dir die Lösung vor? / How do you imagine the solution?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativen / Alternatives
+      description: Welche anderen Wege hast du erwogen? / Which other approaches did you consider?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Bereich / Area
+      description: Welchen Teil von OpenEOS betrifft der Vorschlag? / Which part of OpenEOS does the proposal affect?
+      options:
+        - Admin-Dashboard
+        - POS (Kasse) / POS
+        - Kundendisplay / Customer display
+        - Küchen- & Stationsdisplay / Kitchen & station display
+        - Geräte & Kopplung / Devices & pairing
+        - Bestellungen & Zahlungen / Orders & payments
+        - Rechnungen & Stripe / Invoices & Stripe
+        - Produkte, Kategorien & Lager / Products, categories & inventory
+        - Events, Tische & Preise / Events, tables & pricing
+        - Drucker & Drucker-Agent / Printers & printer agent
+        - Integrationen (z. B. SumUp) / Integrations
+        - Anmeldung & Benutzerkonten / Sign-in & accounts
+        - Self-Hosting & Deployment
+        - Sonstiges / Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: roles
+    attributes:
+      label: Zielgruppe / Target audience
+      description: Wer würde das Feature nutzen? Mehrfachauswahl möglich. / Who would use the feature? Multiple selections possible.
+      multiple: true
+      options:
+        - Administration
+        - Kasse & Personal / POS & staff
+        - Gast / Guest
+        - Technik & IT / Technical & IT
+    validations:
+      required: false
+
+  - type: upload
+    id: mockups
+    attributes:
+      label: Mockups & Skizzen / Mockups & sketches
+      description: 'Optional: Bilder oder PDFs zur Idee. / Optional: images or PDFs illustrating the idea.'
+    validations:
+      required: false
+      accept: '.png,.jpg,.jpeg,.gif,.webp,.pdf'
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Bestätigung / Confirmation
+      options:
+        - label: Ich habe nach bereits vorhandenen Issues und Vorschlägen gesucht. / I searched for existing issues and proposals.
+          required: true
+        - label: Ich möchte bei der Umsetzung mithelfen (PR willkommen). / I would like to help implement this (PR welcome).
+          required: false

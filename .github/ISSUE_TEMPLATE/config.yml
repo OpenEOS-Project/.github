@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Dokumentation / Documentation
+    url: https://docs.openeos.de
+    about: Anleitungen zu Installation, Einrichtung und Betrieb / Guides for installation, setup and operation
+  - name: Sicherheitslücke melden / Report a security vulnerability
+    url: https://github.com/OpenEOS-Project/.github/blob/main/SECURITY.md
+    about: Bitte nicht als öffentliches Issue melden; melde im betroffenen Repository / Please do not report security issues publicly; report in the affected repository
+  - name: OpenEOS-Website / Website
+    url: https://openeos.de
+    about: Projekt, Funktionen und Kontakt / Project, features and contact
